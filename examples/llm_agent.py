@@ -252,7 +252,7 @@ class LLMAgent:
                         "decision": choice.kind,
                         **choice.prompt,
                         "recent_messages": self._transcript[-TRANSCRIPT_LIMIT:],
-                        "state": _state_json(state),
+                        "state": self._prompt_state(state),
                     },
                     ensure_ascii=False,
                     default=str,
@@ -280,6 +280,9 @@ class LLMAgent:
                     {"role": "user", "content": f"That answer was invalid: {exc}. Answer again using only the given options."}
                 )
         return None, None
+
+    def _prompt_state(self, state: GameState) -> str:
+        return _state_json(state)
 
     def _remember(self, state: GameState) -> None:
         for message in state.new_messages:
